@@ -24,16 +24,19 @@ public class InputActivity extends AppCompatActivity {
     Uri uriFoto;
     Hotel hotel;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input);
+
 
         etJudul = (EditText) findViewById(R.id.editTextNama);
         etDeskripsi = (EditText) findViewById(R.id.editTextDeskripsi);
         etDetail = (EditText) findViewById(R.id.editTextDetail);
         etLokasi = (EditText) findViewById(R.id.editTextLokasi);
         ivFoto = (ImageView) findViewById(R.id.imageViewFoto);
+
 
         ivFoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,6 +45,14 @@ public class InputActivity extends AppCompatActivity {
             }
         });
 
+        hotel = (Hotel) getIntent().getSerializableExtra(MainActivity.HOTEL);
+        if (hotel != null) {
+            setTitle("Edit " + hotel.judul);
+            fillData();
+        } else {
+            setTitle("New Hotel");
+        }
+
         findViewById(R.id.buttonSimpan).setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -49,6 +60,15 @@ public class InputActivity extends AppCompatActivity {
                         doSave();
                     }
                 });
+    }
+
+    private void fillData() {
+        etJudul.setText(hotel.judul);
+        etDeskripsi.setText(hotel.deskripsi);
+        etDetail.setText(hotel.detail);
+        etLokasi.setText(hotel.lokasi);
+        uriFoto = Uri.parse(hotel.foto);
+        ivFoto.setImageURI(uriFoto);
     }
 
     private void doSave() {
@@ -66,6 +86,7 @@ public class InputActivity extends AppCompatActivity {
             finish();
         }
     }
+
 
     private boolean isValid(String judul, String deskripsi,
                             String detail, String lokasi, Uri uriFoto) {
@@ -102,6 +123,7 @@ public class InputActivity extends AppCompatActivity {
         editText.setError(((TextInputLayout) editText.getParent())
                 .getHint() + " Belum Diisi ");
     }
+
 
     private void pickPhoto() {
         Intent intent;
